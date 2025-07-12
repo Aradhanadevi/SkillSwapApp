@@ -90,6 +90,7 @@ public class ChatActivity extends AppCompatActivity {
                 json.toString(),
                 MediaType.parse("application/json")
         );
+        //ai url used 
 
         Request request = new Request.Builder()
                 .url("https://openrouter.ai/api/v1/chat/completions")
