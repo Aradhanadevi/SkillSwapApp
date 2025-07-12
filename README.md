@@ -5,5 +5,5 @@ request others in return
 
 Leader - Aradhanadevi Jadeja - 
 Anjali Valani - 
-Diya Pithva - 
+Diya Pithva - diyapithva0502@gmail.com
 Deep Vadher - 
