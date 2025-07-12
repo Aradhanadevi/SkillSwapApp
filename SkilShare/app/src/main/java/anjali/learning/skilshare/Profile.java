@@ -1,6 +1,9 @@
 package anjali.learning.skilshare;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +24,7 @@ public class Profile extends AppCompatActivity {
     TextView profileTitle, nameTV, emailTV, locationTV, skillsTV, skillOfferedTV, skillRequestedTV;
     DatabaseReference databaseReference;
     String username;
+    Button learnrequestedskill;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +55,14 @@ public class Profile extends AppCompatActivity {
         skillsTV = findViewById(R.id.textSkills);
         skillOfferedTV = findViewById(R.id.textSkillOffered);
         skillRequestedTV = findViewById(R.id.textSkillRequested);
-
+        learnrequestedskill=findViewById(R.id.learnrequestedskill);
+        learnrequestedskill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Profile.this,LearnRequestedSkill.class);
+                startActivity(i);
+            }
+        });
         // Reference to Firebase database node: users/username
         databaseReference = FirebaseDatabase.getInstance().getReference("users").child(username);
 
@@ -64,8 +75,8 @@ public class Profile extends AppCompatActivity {
                     String email = snapshot.child("email").getValue(String.class);
                     String location = snapshot.child("location").getValue(String.class);
                     String skills = snapshot.child("skills").getValue(String.class);
-                    String skillOffered = snapshot.child("skillOffered").getValue(String.class);
-                    String skillRequested = snapshot.child("skillRequested").getValue(String.class);
+                    String skillOffered = snapshot.child("skilloffered").getValue(String.class);
+                    String skillRequested = snapshot.child("skillrequested").getValue(String.class);
 
                     // Set values in UI
                     profileTitle.setText(name + "'s Profile");
