@@ -18,10 +18,9 @@ import com.google.firebase.database.ValueEventListener;
 
 public class Profile extends AppCompatActivity {
 
-    TextView profileTitle, nameTV, emailTV, locationTV, skillsTV;
+    TextView profileTitle, nameTV, emailTV, locationTV, skillsTV, skillOfferedTV, skillRequestedTV;
     DatabaseReference databaseReference;
-
-    String username; // dynamic username
+    String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +34,7 @@ public class Profile extends AppCompatActivity {
             return insets;
         });
 
-        // Getting username from Intent
+        // Get the username passed from the previous activity
         username = getIntent().getStringExtra("username");
 
         if (username == null || username.isEmpty()) {
@@ -44,17 +43,19 @@ public class Profile extends AppCompatActivity {
             return;
         }
 
-        // Linking UI elements
+        // Link UI elements
         profileTitle = findViewById(R.id.profileTitle);
         nameTV = findViewById(R.id.textName);
         emailTV = findViewById(R.id.textEmail);
         locationTV = findViewById(R.id.textLocation);
         skillsTV = findViewById(R.id.textSkills);
+        skillOfferedTV = findViewById(R.id.textSkillOffered);
+        skillRequestedTV = findViewById(R.id.textSkillRequested);
 
-        // Firebase reference
+        // Reference to Firebase database node: users/username
         databaseReference = FirebaseDatabase.getInstance().getReference("users").child(username);
 
-        // Fetching user data
+        // Fetch data from Firebase
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -63,12 +64,17 @@ public class Profile extends AppCompatActivity {
                     String email = snapshot.child("email").getValue(String.class);
                     String location = snapshot.child("location").getValue(String.class);
                     String skills = snapshot.child("skills").getValue(String.class);
+                    String skillOffered = snapshot.child("skillOffered").getValue(String.class);
+                    String skillRequested = snapshot.child("skillRequested").getValue(String.class);
 
+                    // Set values in UI
                     profileTitle.setText(name + "'s Profile");
-                    nameTV.setText("Name: " + name);
-                    emailTV.setText("Email: " + email);
-                    locationTV.setText("Location: " + location);
-                    skillsTV.setText("Skills: " + skills);
+                    nameTV.setText(name);
+                    emailTV.setText(email);
+                    locationTV.setText(location);
+                    skillsTV.setText(skills);
+                    skillOfferedTV.setText(skillOffered);
+                    skillRequestedTV.setText(skillRequested);
                 } else {
                     Toast.makeText(Profile.this, "User not found!", Toast.LENGTH_SHORT).show();
                 }
