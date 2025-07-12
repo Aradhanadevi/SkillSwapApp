@@ -6,12 +6,30 @@
         tools:context=".FeedbackFragment">
 
 
-        <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <RatingBar
+            android:id="@+id/ratingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Feedback Fragment"
-            android:textSize="30sp"
-            android:layout_centerInParent="true"
-            />
+            android:numStars="5"
+            android:stepSize="1.0" />
 
-    </RelativeLayout>
+        <EditText
+            android:id="@+id/feedbackInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Write your feedback here" />
+
+        <Button
+            android:id="@+id/submitBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submit Feedback" />
+    </LinearLayout>
+
+</RelativeLayout>
