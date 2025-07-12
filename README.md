@@ -4,6 +4,6 @@ Problem Statement: Develop a Skill Swap Platform — a mini application that ena
 request others in return
 
 Leader - Aradhanadevi Jadeja - 
-Anjali Valani - 
+Anjali Valani -anjali.valani119484@marwadiuniversity.ac.in 
 Diya Pithva - diyapithva0502@gmail.com
 Deep Vadher - 
