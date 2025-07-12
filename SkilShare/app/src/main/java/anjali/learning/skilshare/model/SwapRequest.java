@@ -1,51 +1,53 @@
 package anjali.learning.skilshare.model;
 
 public class SwapRequest {
-    private String requesterName;
-    private String requestedSkill;
+
+    private String id;
+    private String fromUser;
+    private String toUser;
     private String offeredSkill;
-    private String contactInfo;
+    private String requestedSkill;
+    private String status;
 
     public SwapRequest() {
-        // Needed for Firebase
+        // Required for Firebase
     }
 
-    public SwapRequest(String requesterName, String requestedSkill, String offeredSkill, String contactInfo) {
-        this.requesterName = requesterName;
-        this.requestedSkill = requestedSkill;
+    public SwapRequest(String id, String fromUser, String toUser, String offeredSkill, String requestedSkill, String status) {
+        this.id = id;
+        this.fromUser = fromUser;
+        this.toUser = toUser;
         this.offeredSkill = offeredSkill;
-        this.contactInfo = contactInfo;
-    }
-
-    public String getRequesterName() {
-        return requesterName;
-    }
-
-    public void setRequesterName(String requesterName) {
-        this.requesterName = requesterName;
-    }
-
-    public String getRequestedSkill() {
-        return requestedSkill;
-    }
-
-    public void setRequestedSkill(String requestedSkill) {
         this.requestedSkill = requestedSkill;
+        this.status = status;
     }
 
-    public String getOfferedSkill() {
-        return offeredSkill;
-    }
-
-    public void setOfferedSkill(String offeredSkill) {
+    // 🔑 Use this if you want to create without ID first
+    public SwapRequest(String fromUser, String toUser, String offeredSkill, String requestedSkill) {
+        this.fromUser = fromUser;
+        this.toUser = toUser;
         this.offeredSkill = offeredSkill;
+        this.requestedSkill = requestedSkill;
+        this.status = "pending";
     }
 
-    public String getContactInfo() {
-        return contactInfo;
-    }
+    // Getters and setters
 
-    public void setContactInfo(String contactInfo) {
-        this.contactInfo = contactInfo;
-    }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+
+    public String getFromUser() { return fromUser; }
+    public void setFromUser(String fromUser) { this.fromUser = fromUser; }
+
+    public String getToUser() { return toUser; }
+    public void setToUser(String toUser) { this.toUser = toUser; }
+
+    public String getOfferedSkill() { return offeredSkill; }
+    public void setOfferedSkill(String offeredSkill) { this.offeredSkill = offeredSkill; }
+
+    public String getRequestedSkill() { return requestedSkill; }
+    public void setRequestedSkill(String requestedSkill) { this.requestedSkill = requestedSkill; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }

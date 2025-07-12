@@ -25,5 +25,4 @@
         android:padding="16dp"
         android:backgroundTint="@color/purple_500"
         android:textColor="@android:color/white"/>
-
 </LinearLayout>

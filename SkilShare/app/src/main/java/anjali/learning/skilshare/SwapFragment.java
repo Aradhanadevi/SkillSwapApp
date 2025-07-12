@@ -16,18 +16,24 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+// ✅ ✅ ✅ ADD THIS LINE
+import anjali.learning.skilshare.model.SwapRequest;
+
 public class SwapFragment extends Fragment {
 
-    private String username; // 🔑 Will be set dynamically from arguments
+    private String username;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_swap, container, false);
 
-        // ✅ Get username from arguments
         if (getArguments() != null) {
             username = getArguments().getString("username");
+        }
+
+        if (username == null) {
+            username = "anjali valani"; // fallback for test
         }
 
         Button swapButton = view.findViewById(R.id.swap_button);
@@ -37,11 +43,6 @@ public class SwapFragment extends Fragment {
     }
 
     private void findAndRequestSwap() {
-        if (username == null) {
-            Toast.makeText(getActivity(), "Username not provided!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
 
         usersRef.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -60,7 +61,6 @@ public class SwapFragment extends Fragment {
                     return;
                 }
 
-                // ✅ Search for a matching user
                 usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot allUsersSnapshot) {
@@ -68,7 +68,7 @@ public class SwapFragment extends Fragment {
 
                         for (DataSnapshot userSnapshot : allUsersSnapshot.getChildren()) {
                             String otherUsername = userSnapshot.getKey();
-                            if (otherUsername.equals(username)) continue; // Skip self
+                            if (otherUsername.equals(username)) continue;
 
                             String otherOffered = userSnapshot.child("skilloffered").getValue(String.class);
                             String otherRequested = userSnapshot.child("skillrequested").getValue(String.class);
@@ -76,7 +76,6 @@ public class SwapFragment extends Fragment {
                             if (offeredSkill.equalsIgnoreCase(otherRequested) &&
                                     requestedSkill.equalsIgnoreCase(otherOffered)) {
 
-                                // ✅ Create swap request
                                 DatabaseReference swapRef = FirebaseDatabase.getInstance()
                                         .getReference("swaprequests")
                                         .push();

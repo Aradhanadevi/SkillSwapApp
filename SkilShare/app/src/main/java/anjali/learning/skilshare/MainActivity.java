@@ -19,7 +19,11 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.*;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -30,16 +34,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_main);
 
-        // ✅ Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // ✅ Drawer + NavigationView
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -49,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        // ✅ Bottom Navigation
         bottomNav = findViewById(R.id.bottom_nav);
         bottomNav.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
@@ -77,13 +77,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         });
 
-        // ✅ Drawer header user info
         View headerView = navigationView.getHeaderView(0);
         TextView nameTextView = headerView.findViewById(R.id.name);
         TextView emailTextView = headerView.findViewById(R.id.email);
         ImageView profileImage = headerView.findViewById(R.id.profileimg);
 
         username = getIntent().getStringExtra("username");
+        if (username == null || username.isEmpty()) {
+            username = "anjali valani"; // fallback
+        }
+
         DatabaseReference userRef = FirebaseDatabase.getInstance()
                 .getReference("users")
                 .child(username);
@@ -94,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (snapshot.exists()) {
                     String name = snapshot.child("name").getValue(String.class);
                     String email = snapshot.child("email").getValue(String.class);
-
                     nameTextView.setText(name);
                     emailTextView.setText(email);
                 }
@@ -112,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
         });
 
-        // ✅ Default fragment
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new HomeFragment())
@@ -149,10 +150,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_feedback) {
             selectedFragment = new FeedbackFragment();
         } else if (id == R.id.nav_barter) {
-            selectedFragment = new SwapFragment(); // ✅ Skill Swap section
-        } else if (id == R.id.nav_logout) {
+            selectedFragment = new SwapFragment();
+            Bundle args = new Bundle();
+            args.putString("username", username);
+            selectedFragment.setArguments(args);}
+//        } else if (id == R.id.nav_view_swap_requests) { // ✅ YOUR NEW OPTION
+//            selectedFragment = new ViewSwapRequestsFragment();
+//            Bundle args = new Bundle();
+//            args.putString("username", username);
+//            selectedFragment.setArguments(args);
+//        }
+//        else if (id == R.id.nav_explore_swap_users) {
+//            selectedFragment = new ExploreSwapUsersFragment();
+//            Bundle args = new Bundle();
+//            args.putString("username", username);
+//            selectedFragment.setArguments(args);
+//        }
+
+        else if (id == R.id.nav_logout) {
             Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show();
-            // FirebaseAuth.getInstance().signOut();
         }
 
         if (selectedFragment != null) {
