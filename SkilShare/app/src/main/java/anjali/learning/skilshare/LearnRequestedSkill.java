@@ -1,6 +1,5 @@
 package anjali.learning.skilshare;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -9,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.*;
 
 import java.util.ArrayList;
@@ -32,16 +32,28 @@ public class LearnRequestedSkill extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         tutorList = new ArrayList<>();
-        adapter = new TutorAdapter(this, tutorList);
-        recyclerView.setAdapter(adapter);
 
+        // Get skill requested from Intent
         String skillRequested = getIntent().getStringExtra("skillrequested");
-
         if (skillRequested == null || skillRequested.isEmpty()) {
             Toast.makeText(this, "No skill requested passed", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // 🔐 Get current logged-in username (adjust logic as per your project)
+        String currentUsername = getIntent().getStringExtra("currentUsername");
+        if (currentUsername == null || currentUsername.isEmpty()) {
+            Toast.makeText(this, "Username not passed!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Initialize Adapter with currentUsername
+        // after you build tutorList and have currentUsername
+        TutorAdapter adapter = new TutorAdapter(this, tutorList, currentUsername);
+        recyclerView.setAdapter(adapter);
+
+
+        // Firebase DB reference
         usersRef = FirebaseDatabase.getInstance().getReference("users");
 
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -64,13 +76,15 @@ public class LearnRequestedSkill extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
 
                 if (tutorList.isEmpty()) {
-                    Toast.makeText(LearnRequestedSkill.this, "No tutors found offering this skill", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LearnRequestedSkill.this,
+                            "No tutors found offering this skill", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(LearnRequestedSkill.this, "Database error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LearnRequestedSkill.this,
+                        "Database error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
