@@ -13,7 +13,7 @@ import java.util.List;
 
 import anjali.learning.skilshare.R;
 import anjali.learning.skilshare.model.ChatMessage;
-
+// Adapter class for RecyclerView to display chat messages (user & bot)
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int TYPE_USER = 0;
@@ -48,7 +48,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             return new BotViewHolder(view);
         }
     }
-
+ 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ChatMessage message = messages.get(position);
@@ -58,7 +58,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ((BotViewHolder) holder).textView.setText(message.getText());
         }
     }
-
+// Return total number of chat messages
     @Override
     public int getItemCount() {
         return messages.size();
@@ -68,7 +68,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         messages.add(message);
         notifyItemInserted(messages.size() - 1);
     }
-
+// ViewHolder for user messages
     static class UserViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
 
@@ -77,7 +77,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             textView = itemView.findViewById(R.id.textUser);
         }
     }
-
+// ViewHolder for bot messages
     static class BotViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
 
