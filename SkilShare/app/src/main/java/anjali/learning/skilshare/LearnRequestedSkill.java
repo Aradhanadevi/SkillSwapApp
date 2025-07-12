@@ -1,67 +1,76 @@
 package anjali.learning.skilshare;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.*;
+
+import java.util.ArrayList;
+
+import anjali.learning.skilshare.Adapter.TutorAdapter;
+import anjali.learning.skilshare.model.UserModel;
 
 public class LearnRequestedSkill extends AppCompatActivity {
 
-    TextView skillNameTV, tutorTV, descriptionTV, emailTV;
+    RecyclerView recyclerView;
+    TutorAdapter adapter;
+    ArrayList<UserModel> tutorList;
+    DatabaseReference usersRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learn_requested_skill);
 
-        skillNameTV = findViewById(R.id.skillNameTV);
-        tutorTV = findViewById(R.id.tutorTV);
-        descriptionTV = findViewById(R.id.descriptionTV);
-        emailTV = findViewById(R.id.emailTV);
+        recyclerView = findViewById(R.id.recyclerTutors);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // ✅ Get username from Intent dynamically!
-        String username = getIntent().getStringExtra("username");
+        tutorList = new ArrayList<>();
+        adapter = new TutorAdapter(this, tutorList);
+        recyclerView.setAdapter(adapter);
 
-        if (username == null || username.isEmpty()) {
-            Toast.makeText(this, "Username not provided!", Toast.LENGTH_SHORT).show();
-            finish();
+        String skillRequested = getIntent().getStringExtra("skillrequested");
+
+        if (skillRequested == null || skillRequested.isEmpty()) {
+            Toast.makeText(this, "No skill requested passed", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        DatabaseReference dbRef = FirebaseDatabase.getInstance()
-                .getReference("requestedskillcourses")
-                .child(username);
+        usersRef = FirebaseDatabase.getInstance().getReference("users");
 
-        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot child : snapshot.getChildren()) {
-                        String skillName = child.getKey();
-                        String tutor = child.child("tutor").getValue(String.class);
-                        String description = child.child("description").getValue(String.class);
-                        String email = child.child("email").getValue(String.class);
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                tutorList.clear();
 
-                        skillNameTV.setText("Skill: " + skillName);
-                        tutorTV.setText("Tutor: " + tutor);
-                        descriptionTV.setText("Description: " + description);
-                        emailTV.setText("Tutor Email: " + email);
+                for (DataSnapshot userSnap : snapshot.getChildren()) {
+                    String skillOffered = userSnap.child("skilloffered").getValue(String.class);
+
+                    if (skillRequested.equalsIgnoreCase(skillOffered)) {
+                        String name = userSnap.child("name").getValue(String.class);
+                        String email = userSnap.child("email").getValue(String.class);
+                        String username = userSnap.child("username").getValue(String.class);
+
+                        tutorList.add(new UserModel(name, email, username));
                     }
-                } else {
-                    Toast.makeText(LearnRequestedSkill.this, "No requested skill found", Toast.LENGTH_SHORT).show();
+                }
+
+                adapter.notifyDataSetChanged();
+
+                if (tutorList.isEmpty()) {
+                    Toast.makeText(LearnRequestedSkill.this, "No tutors found offering this skill", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
-                Toast.makeText(LearnRequestedSkill.this, "Failed to load", Toast.LENGTH_SHORT).show();
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(LearnRequestedSkill.this, "Database error", Toast.LENGTH_SHORT).show();
             }
         });
     }

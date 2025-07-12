@@ -60,7 +60,7 @@ public class Profile extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(Profile.this, LearnRequestedSkill.class);
-                i.putExtra("username", username); // ✅ pass the username dynamically!
+                i.putExtra("skillrequested", skillRequestedTV.getText().toString());
                 startActivity(i);
 
             }
