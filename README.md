@@ -1,4 +1,3 @@
-SkillSwapApp
 SkillSwapApp is a mini application built during the Odoo Hackathon. It allows users to list the skills they have and request skills they want in return — promoting learning through skill exchange.
 
 👥 Team Members
