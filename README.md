@@ -2,7 +2,7 @@ SkillSwapApp is a mini application built during the Odoo Hackathon. It allows us
 
 👥 Team Members :
 
-Leader: Aradhanadevi Jadeja
+Leader: Aradhanadevi Jadeja - aradhanadevi.jadeja119740@marwadiuniversity.ac.in
 
 Anjali Valani – anjali.valani119484@marwadiuniversity.ac.in
 
