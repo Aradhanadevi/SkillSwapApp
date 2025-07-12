@@ -59,8 +59,10 @@ public class Profile extends AppCompatActivity {
         learnrequestedskill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(Profile.this,LearnRequestedSkill.class);
+                Intent i = new Intent(Profile.this, LearnRequestedSkill.class);
+                i.putExtra("username", username); // ✅ pass the username dynamically!
                 startActivity(i);
+
             }
         });
         // Reference to Firebase database node: users/username
