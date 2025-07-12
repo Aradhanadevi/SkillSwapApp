@@ -1,10 +1,11 @@
-# SkillSwapApp
+SkillSwapApp
+SkillSwapApp is a mini application built during the Odoo Hackathon. It allows users to list the skills they have and request skills they want in return — promoting learning through skill exchange.
 
-Problem Statement: Develop a Skill Swap Platform — a mini application that enables users to list their skills and 
-request others in return
+👥 Team Members
+Leader: Aradhanadevi Jadeja
 
-Leader - Aradhanadevi Jadeja - 
-Anjali Valani -anjali.valani119484@marwadiuniversity.ac.in 
-Diya Pithva - diyapithva0502@gmail.com
-Deep Vadher - deepvadher07072004@gmail.com
+Anjali Valani – anjali.valani119484@marwadiuniversity.ac.in
 
+Diya Pithva – diyapithva0502@gmail.com
+
+Deep Vadher – deepvadher07072004@gmail.com
