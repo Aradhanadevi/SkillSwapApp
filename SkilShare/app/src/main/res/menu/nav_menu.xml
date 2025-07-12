@@ -47,6 +47,11 @@
             android:icon="@drawable/nav_feedack"
             android:title="Feedback"/>
         <item
+            android:id="@+id/nav_barter"
+            android:icon="@drawable/ic_swap"
+        android:title="Skill Swap" />
+
+        <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/nav_logout"
             android:title="Logout"

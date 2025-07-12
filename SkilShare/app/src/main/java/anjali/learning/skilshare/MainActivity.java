@@ -24,9 +24,9 @@ import com.google.firebase.database.*;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
-    private String username;
     private NavigationView navigationView;
     private BottomNavigationView bottomNav;
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,57 +35,58 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_main);
 
-        // Toolbar code
+        // ✅ Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Drawer and NavView
+        // ✅ Drawer + NavigationView
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // Drawer Toggle
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        // Bottom Navigation
+        // ✅ Bottom Navigation
         bottomNav = findViewById(R.id.bottom_nav);
         bottomNav.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.bottom_home) {
+            Fragment selectedFragment = null;
+
+            int id = item.getItemId();
+            if (id == R.id.bottom_home) {
+                selectedFragment = new HomeFragment();
+            } else if (id == R.id.bottom_explore) {
+                selectedFragment = new ExploreSkilCoursesFragment();
+            } else if (id == R.id.bottom_favourites) {
+                selectedFragment = new FavouritesFragment();
+            } else if (id == R.id.bottom_profile) {
+                Intent profileIntent = new Intent(MainActivity.this, Profile.class);
+                profileIntent.putExtra("username", username);
+                startActivity(profileIntent);
+                return true;
+            }
+
+            if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new HomeFragment())
+                        .replace(R.id.fragment_container, selectedFragment)
                         .commit();
-            } else if (itemId == R.id.bottom_explore) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new ExploreSkilCoursesFragment())
-                        .commit();
-            } else if (itemId == R.id.bottom_favourites) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new FavouritesFragment())
-                        .
-                        commit();
-            } else if (itemId == R.id.bottom_profile) {
-                Intent intent = new Intent(MainActivity.this, Profile.class);
-                intent.putExtra("username", username);
-                startActivity(intent);
             }
 
             return true;
         });
 
-//        Intent intent = new Intent(MainActivity.this, ChatActivity.class);
-//        startActivity(intent);
-
-        // Fetch user info
+        // ✅ Drawer header user info
         View headerView = navigationView.getHeaderView(0);
         TextView nameTextView = headerView.findViewById(R.id.name);
         TextView emailTextView = headerView.findViewById(R.id.email);
         ImageView profileImage = headerView.findViewById(R.id.profileimg);
 
         username = getIntent().getStringExtra("username");
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(username);
+        DatabaseReference userRef = FirebaseDatabase.getInstance()
+                .getReference("users")
+                .child(username);
 
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (snapshot.exists()) {
                     String name = snapshot.child("name").getValue(String.class);
                     String email = snapshot.child("email").getValue(String.class);
+
                     nameTextView.setText(name);
                     emailTextView.setText(email);
                 }
@@ -105,14 +107,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         profileImage.setOnClickListener(v -> {
-            Intent i = new Intent(MainActivity.this, Profile.class);
-            i.putExtra("username", username);
-            startActivity(i);
+            Intent intent = new Intent(MainActivity.this, Profile.class);
+            intent.putExtra("username", username);
+            startActivity(intent);
         });
 
-        // Default fragment
+        // ✅ Default fragment
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new HomeFragment())
+                    .commit();
             navigationView.setCheckedItem(R.id.nav_home);
             bottomNav.setSelectedItemId(R.id.bottom_home);
         }
@@ -123,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Fragment selectedFragment = null;
 
         int id = item.getItemId();
+
         if (id == R.id.nav_home) {
             selectedFragment = new HomeFragment();
         } else if (id == R.id.nav_requestskilcourse) {
@@ -143,13 +148,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             selectedFragment = new SettingsFragment();
         } else if (id == R.id.nav_feedback) {
             selectedFragment = new FeedbackFragment();
+        } else if (id == R.id.nav_barter) {
+            selectedFragment = new SwapFragment(); // ✅ Skill Swap section
         } else if (id == R.id.nav_logout) {
-            Toast.makeText(MainActivity.this, "Logout", Toast.LENGTH_SHORT).show();
-            // Add FirebaseAuth.getInstance().signOut() if using auth
+            Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show();
+            // FirebaseAuth.getInstance().signOut();
         }
 
         if (selectedFragment != null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, selectedFragment)
+                    .commit();
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
