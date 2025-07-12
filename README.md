@@ -6,4 +6,5 @@ request others in return
 Leader - Aradhanadevi Jadeja - 
 Anjali Valani -anjali.valani119484@marwadiuniversity.ac.in 
 Diya Pithva - diyapithva0502@gmail.com
-Deep Vadher - 
+Deep Vadher - deepvadher07072004@gmail.com
+
