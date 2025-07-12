@@ -29,7 +29,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     FirebaseAuth mAuth;
     DatabaseReference database;
-
+//comment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
