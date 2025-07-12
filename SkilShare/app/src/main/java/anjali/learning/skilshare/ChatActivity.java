@@ -35,6 +35,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private ChatAdapter chatAdapter;
     private List<ChatMessage> messages;
+    //This is test
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
